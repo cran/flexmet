@@ -5,9 +5,9 @@
 \alias{inv_transform_b}
 \title{Transform FMP Item Parameters}
 \usage{
-transform_b(bvec, tvec)
+transform_b(bvec, tvec, ncat = 2)
 
-inv_transform_b(bstarvec, tvec)
+inv_transform_b(bstarvec, tvec, ncat = 2)
 }
 \arguments{
 \item{bvec}{Vector of item parameters on the \eqn{\theta} metric: (b0,
@@ -16,8 +16,11 @@ b1, b2, b3, ...).}
 \item{tvec}{Vector of theta transformation polynomial coefficients: (t0, t1,
 t2, t3, ...)}
 
-\item{bstarvec}{Vector of item parameters on the \eqn{\theta^{\star}}{\theta*} metric:
-(b*0, b*1, b*2, b*3, ...)}
+\item{ncat}{Number of response categories (first ncat - 1 elements of bvec
+and bstarvec are intercepts)}
+
+\item{bstarvec}{Vector of item parameters on the
+\eqn{\theta^{\star}}{\theta*} metric: (b*0, b*1, b*2, b*3, ...)}
 }
 \value{
 Vector of transformed FMP item parameters.
@@ -44,6 +47,11 @@ where
 \deqn{\theta = t_0 + t_1\theta^\star + t_2\theta^{\star 2} + \cdots +
 t_{2k_\theta+1}\theta^{\star2k_\theta+1}}{\theta = t0 + t1\theta* +
 t2\theta*^2 + ... + t_{2k_\theta+1}\theta*^{2k_\theta+1}.}
+
+When using inv_transform_b, be aware that multiple tvec/bstarvec pairings 
+will lead to the same bvec. Users are advised not to use the 
+inv_transform_b function unless bstarvec has first been calculated by a call
+to transform_b.
 }
 \examples{
 

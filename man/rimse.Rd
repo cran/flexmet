@@ -4,7 +4,16 @@
 \alias{rimse}
 \title{Root Integrated Mean Squared Difference Between FMP IRFs}
 \usage{
-rimse(bvec1, bvec2, c1 = 0, d1 = 1, c2 = 0, d2 = 1, int = int_mat())
+rimse(
+  bvec1,
+  bvec2,
+  ncat = 2,
+  c1 = NULL,
+  d1 = NULL,
+  c2 = NULL,
+  d2 = NULL,
+  int = int_mat()
+)
 }
 \arguments{
 \item{bvec1}{Either a vector of FMP item parameters or a function
@@ -14,6 +23,9 @@ corresponding to the latent trait.}
 \item{bvec2}{Either a vector of FMP item parameters or a function
 corresponding to a non-FMP IRF. Functions should have exactly one argument,
 corresponding to the latent trait.}
+
+\item{ncat}{Number of response categories (first ncat - 1 elemnts of bvec1
+and bvec2 are intercepts)}
 
 \item{c1}{Lower asymptote parameter for bvec1.
 Ignored if bvec1 is a function.}
@@ -32,7 +44,8 @@ Column 1 is a grid of theta values, column 2 are normalized densities
 associated with the column 1 values}
 }
 \value{
-Root integrated mean squared difference between two IRFs.
+Root integrated mean squared difference between two IRFs
+(dichotomous items) or expected item scores (polytomous items).
 }
 \description{
 Compute the root integrated mean squared error (RIMSE) between two FMP IRFs.
@@ -40,21 +53,29 @@ Compute the root integrated mean squared error (RIMSE) between two FMP IRFs.
 \examples{
 
 set.seed(2342)
-bmat <- sim_bmat(n_items = 1, k = 2)$bmat
+bmat <- sim_bmat(n_items = 2, k = 2, ncat = c(2, 5))$bmat
 
 theta <- rnorm(500)
-dat <- sim_data(bmat = bmat, theta = theta)
+dat <- sim_data(bmat = bmat, theta = theta, maxncat = 5)
 
 # k = 0
-fmp0 <- fmp_1(dat = dat, k = 0, tsur = theta)
+fmp0a <- fmp_1(dat = dat[, 1], k = 0, tsur = theta)
+fmp0b <- fmp_1(dat = dat[, 2], k = 0, tsur = theta)
 
+\donttest{
 # k = 1
-fmp1 <- fmp_1(dat = dat, k = 1, tsur = theta)
+fmp1a <- fmp_1(dat = dat[, 1], k = 1, tsur = theta)
+fmp1b <- fmp_1(dat = dat[, 2], k = 1, tsur = theta)
+}
 
 ## compare estimated curves to the data-generating curve
-rimse(fmp0$bmat, bmat)
-rimse(fmp1$bmat, bmat)
+rimse(fmp0a$bmat, bmat[1, -c(2:4)])
+rimse(fmp0b$bmat, bmat[2, ], ncat = 5)
 
+\donttest{
+rimse(fmp1a$bmat, bmat[1, -c(2:4)])
+rimse(fmp1b$bmat, bmat[2, ], ncat = 5)
+}
 
 }
 \references{

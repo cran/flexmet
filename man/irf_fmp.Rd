@@ -4,19 +4,25 @@
 \alias{irf_fmp}
 \title{FMP Item Response Function}
 \usage{
-irf_fmp(theta, bmat, cvec = NULL, dvec = NULL)
+irf_fmp(theta, bmat, maxncat = 2, returncat = NA, cvec = NULL, dvec = NULL)
 }
 \arguments{
 \item{theta}{Vector of latent trait parameters.}
 
-\item{bmat}{Items x parameters matrix of FMP item parameters
-(or a vector of FMP item parameters for a single item).}
+\item{bmat}{Items x parameters matrix of FMP item parameters (or a vector of
+FMP item parameters for a single item).}
 
-\item{cvec}{Optional vector of lower asymptote parameters.
-If cvec = NULL, then all lower asymptotes set to 0.}
+\item{maxncat}{Maximum number of response categories (the first maxncat - 1
+columns of bmat are intercepts).}
 
-\item{dvec}{Optional vector of upper asymptote parameters.
-If dvec = NULL, then all upper asymptotes set to 1.}
+\item{returncat}{Response categories for which probabilities should be
+returned, 0,..., maxncat - 1.}
+
+\item{cvec}{Optional vector of lower asymptote parameters. If cvec = NULL,
+then all lower asymptotes set to 0.}
+
+\item{dvec}{Optional vector of upper asymptote parameters. If dvec = NULL,
+then all upper asymptotes set to 1.}
 }
 \value{
 Matrix of item response probabilities.
@@ -27,15 +33,19 @@ for user-supplied item and person parameters.
 }
 \examples{
 
-# plot the IRF for an item with k = 2
+# plot the IRF for an item with 4 response categories and k = 2
 
 set.seed(2342)
-bmat <- sim_bmat(n_items = 1, k = 2)$bmat
+bmat <- sim_bmat(n_items = 1, ncat = 4, k = 2)$bmat
 
 theta <- seq(-3, 3, by = .01)
 
-probability <- irf_fmp(theta = theta, bmat = bmat)
+probability <- irf_fmp(theta = theta, bmat = bmat,
+                       maxncat = 4, returncat = 0:3)
 
-plot(theta, probability, type = 'l')
+plot(theta, probability[, , 1], type = 'l', ylab = "probability")
+points(theta, probability[, , 2], type = 'l')
+points(theta, probability[, , 3], type = 'l')
+points(theta, probability[, , 4], type = 'l')
 
 }

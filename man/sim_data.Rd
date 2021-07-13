@@ -4,18 +4,21 @@
 \alias{sim_data}
 \title{Simulate FMP Data}
 \usage{
-sim_data(bmat, theta, cvec = NULL, dvec = NULL)
+sim_data(bmat, theta, maxncat = 2, cvec = NULL, dvec = NULL)
 }
 \arguments{
 \item{bmat}{Matrix of FMP item parameters.}
 
 \item{theta}{Vector of latent trait values.}
 
-\item{cvec}{Optional vector of lower asymptote parameters.
-If cvec = NULL, then all lower asymptotes set to 0.}
+\item{maxncat}{Maximum number of response categories  (the first maxncat - 1
+columns of bmat are intercepts)}
 
-\item{dvec}{Optional vector of upper asymptote parameters.
-If dvec = NULL, then all upper asymptotes set to 1.}
+\item{cvec}{Optional vector of lower asymptote parameters. If cvec = NULL,
+then all lower asymptotes set to 0.}
+
+\item{dvec}{Optional vector of upper asymptote parameters. If dvec = NULL,
+then all upper asymptotes set to 1.}
 }
 \value{
 Matrix of randomly generated binary item responses.
@@ -26,13 +29,13 @@ latent trait parameters.
 }
 \examples{
 
-## generate binary item responses for normally distributed theta
+## generate 5-category item responses for normally distributed theta
 ##   and 5 items with k = 2
 
 set.seed(2342)
-bmat <- sim_bmat(n_items = 5, k = 2)$bmat
+bmat <- sim_bmat(n_items = 5, k = 2, ncat = 5)$bmat
 
 theta <- rnorm(50)
-dat <- sim_data(bmat = bmat, theta = theta)
+dat <- sim_data(bmat = bmat, theta = theta, maxncat = 5)
 
 }
